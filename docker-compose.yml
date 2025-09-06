@@ -11,41 +11,26 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   backend:
     build: ./backend/
     env_file: .env
     volumes:
-      - static:/app/collected_static
-      - media:/app/media/
-    depends_on:
-      db:
-        condition: service_healthy
-    command: >
-      sh -c "python manage.py collectstatic --noinput &&
-             python manage.py migrate &&           # УБРАТЬ --noinput ОТСЮДА
-             gunicorn --bind 0.0.0.0:8000 kittygram_backend.wsgi:application"
+      - static:/backend_static
+      - media:/media/
 
   frontend:
     build: ./frontend/
     env_file: .env
-    command: sh -c "cp -r /app/build/. /static/"
+    command: sh -c "cp -r /app/build/. /frontend_static/"
     volumes:
-      - static:/static
+      - static:/frontend_static
 
   gateway:
     build: ./nginx/
     env_file: .env
-    ports:
-      - 9000:80
     volumes:
       - static:/static
       - media:/media/
-    depends_on:
-      - backend
-      - frontend
+    ports:
+      - 9000:80
