@@ -18,8 +18,8 @@ services:
       - static:/app/collected_static
       - media:/app/media/
   frontend:
-    env_file: .env
     build: ./frontend/
+    env_file: .env
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
