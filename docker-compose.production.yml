@@ -1,49 +1,49 @@
-version: "3.8"
-
 volumes:
-  pg_data_production:
-  static_volume:
-  media_volume:
+  pg_data:
+  static:
+  media:
 
 services:
   db:
-    image: postgres:13.10
+    image: postgres:13
     env_file: .env
     volumes:
-      - pg_data_production:/var/lib/postgresql/data
-    healthcheck: # ДОБАВЬТЕ ЭТО
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
-    image: dyachenkomark/kittygram_backend
+    build: ./backend/
     env_file: .env
     volumes:
-      - static_volume:/app/collected_static
-      - media_volume:/app/media/
-    depends_on: # ДОБАВЬТЕ ЭТО
+      - static:/app/collected_static
+      - media:/app/media/
+    depends_on:
       db:
         condition: service_healthy
-    command: > # ДОБАВЬТЕ КОМАНДУ
-      sh -c "python manage.py collectstatic --noinput &&
-             python manage.py migrate --noinput &&
+    command: >
+      sh -c "python manage.py collectstatic --noinput --clear &&
+             python manage.py migrate &&
              gunicorn --bind 0.0.0.0:8000 kittygram_backend.wsgi:application"
 
   frontend:
-    image: dyachenkomark/kittygram_frontend
-    command: cp -r /app/build/. /static/
+    build: ./frontend/
+    env_file: .env
+    command: sh -c "cp -r /app/build/. /static/"
     volumes:
-      - static_volume:/static/
+      - static:/static
 
   gateway:
-    image: dyachenkomark/kittygram_gateway
-    volumes:
-      - static_volume:/static/
-      - media_volume:/media/
+    build: ./nginx/
+    env_file: .env
     ports:
       - 9000:80
-    depends_on: # ДОБАВЬТЕ ЭТО
+    volumes:
+      - static:/static
+      - media:/media/
+    depends_on:
       - backend
       - frontend
