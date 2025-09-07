@@ -1,3 +1,7 @@
+## Статус сборки
+
+[![Main Kittygram workflow](https://github.com/dyachenkomark/kittygram_final/actions/workflows/main.yml/badge.svg)](https://github.com/dyachenkomark/kittygram_final/actions/workflows/main.yml)
+
 ### Как запустить проект:
 
 Клонировать репозиторий и перейти в него в командной строке:
@@ -16,17 +20,17 @@ Cоздать и активировать виртуальное окружен�
 python3 -m venv env
 ```
 
-* Если у вас Linux/macOS
+- Если у вас Linux/macOS
 
-    ```
-    source env/bin/activate
-    ```
+  ```
+  source env/bin/activate
+  ```
 
-* Если у вас windows
+- Если у вас windows
 
-    ```
-    source env/scripts/activate
-    ```
+  ```
+  source env/scripts/activate
+  ```
 
 ```
 python3 -m pip install --upgrade pip
