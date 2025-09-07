@@ -16,6 +16,8 @@ services:
     volumes:
       - static_volume:/backend_static
       - media_volume:/media/
+    depends_on:
+      - db
 
   frontend:
     image: dyachenkomark/kittygram_frontend
@@ -32,3 +34,6 @@ services:
       - media_volume:/media/
     ports:
       - 9000:80
+    depends_on:
+      - backend
+      - frontend
