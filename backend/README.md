@@ -1,7 +1,3 @@
-## Статус сборки
-
-[![Main Kittygram workflow](https://github.com/dyachenkomark/kittygram_final/actions/workflows/main.yml/badge.svg)](https://github.com/dyachenkomark/kittygram_final/actions/workflows/main.yml)
-
 ### Как запустить проект:
 
 Клонировать репозиторий и перейти в него в командной строке:
